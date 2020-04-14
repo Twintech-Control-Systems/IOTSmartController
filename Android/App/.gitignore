@@ -1,1 +1,14 @@
-[{"pid":0,"ph":"i","name":"Memory sample","ts":1524374658920000,"args":{"JVM stats":"heap_memory_usage: 539060088\nnon_heap_memory_usage: 163695600\nloaded_class_count: 16616\nthread_count: 22\ngarbage_collec
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
