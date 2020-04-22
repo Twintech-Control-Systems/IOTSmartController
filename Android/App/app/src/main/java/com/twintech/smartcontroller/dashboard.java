@@ -1,14 +1,21 @@
 package com.twintech.smartcontroller;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,44 +26,74 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class dashboard extends AppCompatActivity {
-    GridView gridView;
+    private int noOfChannels = 8;
+    private int channelScanPeriod = 1000;
+    DashboardAdapter myAdapter;
     ImageButton notificationButton,graphButton,alarmButton,refreshButton,wifiButton,cloudButton,settingsButton;
-    static final String[] numbers = new String[] {
-            "Channel 1", "Channel 2", "Channel 3", "Channel 4",
-            "Channel 5", "Channel 6", "Channel 7", "Channel 8",
-            "Channel 9", "Channel 10", "Channel 11", "Channel 12",
-            "Channel 13", "Channel 14", "Channel 15", "Channel 16",
-            };
     private static final int DEFAULT_PORT = 8080;
     RecyclerView mRecyclerView;
-    List<ChannelData> mChannelList;
+    public List<ChannelData> mChannelList,sChannelList;
     ChannelData mChannelData;
     // INSTANCE OF ANDROID WEB SERVER
     private AndroidWebServer androidWebServer;
-    private static boolean isStarted = false;
+
     private static boolean relayNotification = true;
+    private Timer myTimer;
+    DBHelper mydb;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        startAndroidWebServer();
+        try{
+            //some exception
+        }catch(Exception e){
+
+            Log.e("",e.getMessage());
+        }
+        mydb = new DBHelper(this);
+        addChannels();
+        initChannels();
+        startService(new Intent(getBaseContext(), ChannelService.class));
+
         mRecyclerView = findViewById(R.id.recyclerview);
         /// Recycler view to grid lyout
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(dashboard.this, 4);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
+
         // Add Channel Data
-        getChannels();
+        //getDataFromDB();
+
+        myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void run() {
+                //getChannelDataHW();
+                getDataFromDB();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        myAdapter.dataSetChanged(myAdapter);
 
 
-        DashboardAdapter myAdapter = new DashboardAdapter(dashboard.this, mChannelList);
+                    }
+                });
+            }
+
+        }, 0, channelScanPeriod);
+        myAdapter = new DashboardAdapter(dashboard.this, mChannelList);
         mRecyclerView.setAdapter(myAdapter);
-
 
         notificationButton = findViewById(R.id.notificationButton);
         if(relayNotification) {
@@ -76,6 +113,8 @@ public class dashboard extends AppCompatActivity {
         settingsButton.setOnClickListener(buttonListener);
 
     }
+
+
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
             // do something when the button is clicked
@@ -85,32 +124,22 @@ public class dashboard extends AppCompatActivity {
             switch (v.getId() /*to get clicked view id**/) {
                 case R.id.notificationButton:
                     View contextView = findViewById(R.id.notificationButton);
-
                     Snackbar.make(contextView, "Notification Button Pressed!!", Snackbar.LENGTH_SHORT).show();
-                    // do something when the corky is clicked
-
                     break;
                 case R.id.graphButton:
-
-                    // do something when the corky2 is clicked
                     Toast.makeText(getApplicationContext(),
                             "Graph button pressed!!", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.alarmButton:
-
-                    // do something when the corky3 is clicked
                     Toast.makeText(getApplicationContext(),
                             "Alarm button pressed!!", Toast.LENGTH_SHORT).show();
+                    displayDialog("Dialog !!");
                     break;
                 case R.id.refreshButton:
-
-                    // do something when the corky3 is clicked
                     Toast.makeText(getApplicationContext(),
                             "Refresh button pressed!!", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.settingsButton:
-
-                    // do something when the corky3 is clicked
                     Toast.makeText(getApplicationContext(),
                             "Settings button pressed!!", Toast.LENGTH_SHORT).show();
                     break;
@@ -119,62 +148,117 @@ public class dashboard extends AppCompatActivity {
             }
         }
     };
-    private boolean startAndroidWebServer() {
-        if (!isStarted) {
-            int port = DEFAULT_PORT;
-            try {
-                if (port == 0) {
-                    throw new Exception();
-                }
-                androidWebServer = new AndroidWebServer(null,port);
-                androidWebServer.start();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
 
-            }
-        }
-        return false;
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        androidWebServer.stop();
+        stopService(new Intent(getBaseContext(), ChannelService.class));
+
     }
 
-    void getChannels(){
+    @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+       myAdapter.dataSetChanged(myAdapter);
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // get data from database
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void getDataFromDB(){
+        for(int i=0;i<noOfChannels;i++){
+            Cursor rs = mydb.getCurrentChannelValue(i);
+            rs.moveToFirst();
+            mChannelList.get(i).setchannelValue(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_VALUE)));
+            mChannelList.get(i).setchannelDate(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_DATE)));
+            mChannelList.get(i).setchannelTime(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_TIME)));
+        }
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Create channel Array List and Channel data for the first time and add to thr database
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void addChannels(){
         mChannelList = new ArrayList<>();
-        mChannelData = new ChannelData(1, "Channel 1","%rh","056.8");
+       /* mChannelData = new ChannelData(1, "Channel 1","%rh","056.8","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(2, "Channel 2","°C","124.9");
+        mChannelData = new ChannelData(2, "Channel 2","°C","124.9","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(3, "Channel 3","°F","212.0");
+        mChannelData = new ChannelData(3, "Channel 3","°F","212.0","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(4, "Channel 4","bar","600.0");
+        mChannelData = new ChannelData(4, "Channel 4","bar","600.0","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(5, "Channel 5","Kg","100.0");
+        mChannelData = new ChannelData(5, "Channel 5","Kg","100.0","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(6, "Channel 6","W","5600");
+        mChannelData = new ChannelData(6, "Channel 6","W","5600","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(7, "Channel 7","V","230.0");
+        mChannelData = new ChannelData(7, "Channel 7","V","230.0","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(8, "Channel 8","A","10.6");
+        mChannelData = new ChannelData(8, "Channel 8","A","10.6","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(9, "Channel 9","Hz","50000");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(10, "Channel 10","RPM","1800");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(11, "Channel 11","%","50.6");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(12, "Channel 12","Hours","999999.9");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(13, "Channel 13","Km/H","15.2");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(14, "Channel 14","W","5600");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(15, "Channel 15","V","230.0");
-        mChannelList.add(mChannelData);
-        mChannelData = new ChannelData(16, "Channel 16","A","10.6");
-        mChannelList.add(mChannelData);
+        Log.d("MyTag",String.valueOf(mChannelList.get(0).getchannelAlarmHigh()));
+        for (int i = 0; i < noOfChannels; i++) { mydb.createChannelValue(mChannelList,i); }*/
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Initialize the data
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void initChannels(){
+        for(int i=0;i<noOfChannels;i++){
+            Cursor rs = mydb.getCurrentChannelValue(i);
+            rs.moveToFirst();
+            mChannelData = new ChannelData(rs.getInt(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_NO)),
+                    rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_NAME)),
+                    rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_UNIT)),
+                    rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_VALUE)),
+                    rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_DATE)),
+                    rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_TIME)),
+                    Double.valueOf(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_ALMLOW))),
+                            Double.valueOf(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_ALMHIGH))));
+            mChannelList.add(mChannelData);
+        }
+     }
+
+    public void startService(View view) {
+        startService(new Intent(getBaseContext(), ChannelService.class));
+    }
+
+    // Method to stop the service
+    public void stopService(View view) {
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void getChannelDataHW() {
+        String vChannelValue;
+        Random random = new Random();
+        for (int i = 0; i < noOfChannels; i++) {
+            double randomNumber = random.nextInt(1000) / 10;
+            vChannelValue = String.format("%.1f", randomNumber);
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+            String formattedDate = df.format(c.getTime());
+            String time = formattedDate;
+            df = new SimpleDateFormat("dd-MM-yyyy");
+            formattedDate = df.format(c.getTime());
+            String date = formattedDate;
+            mChannelList.get(i).setchannelValue(String.valueOf(vChannelValue));
+            mChannelList.get(i).setchannelTime(time);
+            mChannelList.get(i).setchannelDate(date);
+
+            mydb.updateChannelValue(mChannelList,i);
+            //Log.d("MyTag",mChannelList.get(i).getchannelName());
+            //mydb.addDataLog(mChannelList,i);
+        }
+    }
+
+    void displayDialog(String message){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+                alertDialogBuilder.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                Toast.makeText(dashboard.this,"You clicked yesbutton",Toast.LENGTH_LONG).show();
+                            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
