@@ -3,6 +3,7 @@
   <component name="AndroidLayouts">
     <shared>
       <config>
+        <device id="4.7in WXGA" />
         <target>android-28</target>
       </config>
     </shared>
@@ -13,20 +14,57 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30d05a72-ebef-45bd-a819-243e13595040" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ChannelService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DBHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GR004/library-release.aar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GR018/build/.transforms/799eb56ad785903b089872bcaa5a0639/jetified-library-release/res/drawable/gr018_white_oval.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GR018/build/.transforms/799eb56ad785903b089872bcaa5a0639/jetified-library-release/res/layout/gr018_main.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GR018/build/.transforms/799eb56ad785903b089872bcaa5a0639/jetified-library-release/res/layout/gr018_preview.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GR018/build/.transforms/799eb56ad785903b089872bcaa5a0639/jetified-library-release/res/values/values.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GR018/library-release.aar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/libs/activation.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/libs/additionnal.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/libs/mail.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ChannelFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DashboardGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DatalogFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DeviceFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ExpandableListAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/GMail.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/RelayFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/SendMailTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/SettingsMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/Share.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_battery_std_black_48dp.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_24px.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard_generator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_settings_main.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_share.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/channel_layout_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_channel.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_datalog.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_device.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_relay.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_group.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/xml/provider_paths.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Images/Icons/battery_std-black-48dp.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Images/Icons/share-24px.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ChannelData.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ChannelData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/AndroidWebServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/AndroidWebServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ChannelService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/ChannelService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DashboardAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DashboardAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DashboardDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/DashboardDetail.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/dashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/twintech/smartcontroller/dashboard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard_detail.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard_detail.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recyclerview_channel_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recyclerview_channel_layout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Documents/Smart Controller_Flow.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Documents/Smart Controller_Flow.docx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +72,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="RZ8M322EHLV" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="4.65_720p_Galaxy_Nexus_API_25" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -43,6 +81,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$/app">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand />
@@ -68,13 +109,17 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="android.recentlyUsedThemes" value="AppTheme&#10;Theme.MaterialComponents.NoActionBar.Bridge" />
+    <property name="android.recentlyUsedThemes" value="Theme.MaterialComponents.NoActionBar&#10;Theme.MaterialComponents.NoActionBar.Bridge&#10;AppTheme" />
     <property name="android.sdk.path" value="D:/SoftwaresDell/Android/sdk1" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/AndroidStudio/DeviceExplorer/samsung-sm_a305f-RZ8M322EHLV/data/data/com.twintech.smartcontroller/databases" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="D:/" />
+    <property name="project.structure.last.edited" value="Dependencies" />
     <property name="project.structure.proportion" value="0.17" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="project.structure.side.proportion" value="0.2068528" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.notifications" />
+  </component>
+  <component name="PsdUISettings">
+    <option name="MODULE_TAB" value="Properties" />
+    <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RecentsManager">
     <key name="android.template.packageName">

@@ -11,15 +11,10 @@
         android:layout_height="match_parent"
         app:cardCornerRadius="8dp"
         app:cardElevation="20dp"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="8dp"
-        app:contentPaddingBottom="10dp"
-        app:contentPaddingLeft="20dp"
-        app:contentPaddingRight="20dp"
-        app:contentPaddingTop="10dp">
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 

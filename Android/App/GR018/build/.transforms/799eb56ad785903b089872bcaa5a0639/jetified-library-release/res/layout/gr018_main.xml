@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Main gauge -->
+    <com.sccomponents.gauges.gr018.ScGauges.ScArcGauge
+        android:id="@+id/mainGauge"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Texts -->
+    <LinearLayout
+        android:id="@+id/textsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.sccomponents.gauges.gr018.Utils.AutoSizeTextView
+            android:id="@+id/textTitle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1" />
+
+        <com.sccomponents.gauges.gr018.Utils.AutoSizeTextView
+            android:id="@+id/textValue"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
+</FrameLayout>

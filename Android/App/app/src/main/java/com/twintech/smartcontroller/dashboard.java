@@ -1,27 +1,28 @@
 package com.twintech.smartcontroller;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -29,7 +30,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,7 +42,7 @@ public class dashboard extends AppCompatActivity {
     private int noOfChannels = 8;
     private int channelScanPeriod = 1000;
     DashboardAdapter myAdapter;
-    ImageButton notificationButton,graphButton,alarmButton,refreshButton,wifiButton,cloudButton,settingsButton;
+    ImageButton notificationButton,shareButton,alarmButton,refreshButton,wifiButton,cloudButton,settingsButton;
     private static final int DEFAULT_PORT = 8080;
     RecyclerView mRecyclerView;
     public List<ChannelData> mChannelList,sChannelList;
@@ -56,13 +60,15 @@ public class dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        getSupportActionBar().hide();
         try{
+            mydb = new DBHelper(this);
             //some exception
         }catch(Exception e){
 
             Log.e("",e.getMessage());
         }
-        mydb = new DBHelper(this);
+
         addChannels();
         initChannels();
         startService(new Intent(getBaseContext(), ChannelService.class));
@@ -101,13 +107,13 @@ public class dashboard extends AppCompatActivity {
         }else{
             notificationButton.setImageResource(R.drawable.ic_notifications_24px);
         }
-        graphButton = findViewById(R.id.graphButton);
+        shareButton = findViewById(R.id.share1Button);
         alarmButton = findViewById(R.id.alarmButton);
         refreshButton = findViewById(R.id.refreshButton);
         settingsButton = findViewById(R.id.settingsButton);
         //////////// Set on Click listener to all the buttons
         notificationButton.setOnClickListener(buttonListener);
-        graphButton.setOnClickListener(buttonListener);
+        shareButton.setOnClickListener(buttonListener);
         alarmButton.setOnClickListener(buttonListener);
         refreshButton.setOnClickListener(buttonListener);
         settingsButton.setOnClickListener(buttonListener);
@@ -126,9 +132,11 @@ public class dashboard extends AppCompatActivity {
                     View contextView = findViewById(R.id.notificationButton);
                     Snackbar.make(contextView, "Notification Button Pressed!!", Snackbar.LENGTH_SHORT).show();
                     break;
-                case R.id.graphButton:
+                case R.id.share1Button:
                     Toast.makeText(getApplicationContext(),
-                            "Graph button pressed!!", Toast.LENGTH_SHORT).show();
+                            "Share button pressed!!", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(dashboard.this, Share.class);
+                    startActivity(i);
                     break;
                 case R.id.alarmButton:
                     Toast.makeText(getApplicationContext(),
@@ -138,10 +146,16 @@ public class dashboard extends AppCompatActivity {
                 case R.id.refreshButton:
                     Toast.makeText(getApplicationContext(),
                             "Refresh button pressed!!", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.settingsButton:
+                    List<String> toEmailList = new ArrayList<String>();
+                    toEmailList.add("shounak@twintechcontrols.com");
+                    toEmailList.add("sumeet.bhong@gmail.com ");
                     Toast.makeText(getApplicationContext(),
                             "Settings button pressed!!", Toast.LENGTH_SHORT).show();
+                    new SendMailTask(dashboard.this).execute("","",toEmailList, "Data Log ", "This is a system generated email. Please do not reply.");
+                    break;
+                case R.id.settingsButton:
+                    i = new Intent(dashboard.this, SettingsMain.class);
+                    startActivity(i);
                     break;
                 default:
                     break;
@@ -178,8 +192,8 @@ public class dashboard extends AppCompatActivity {
     // Create channel Array List and Channel data for the first time and add to thr database
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void addChannels(){
-        mChannelList = new ArrayList<>();
-       /* mChannelData = new ChannelData(1, "Channel 1","%rh","056.8","20-04-2020","16:45:00",20.0,80.0);
+        mChannelList = new ArrayList<>();/*
+        mChannelData = new ChannelData(1, "Channel 1","%rh","056.8","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
         mChannelData = new ChannelData(2, "Channel 2","°C","124.9","20-04-2020","16:45:00",20.0,80.0);
         mChannelList.add(mChannelData);
@@ -227,6 +241,8 @@ public class dashboard extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     void getChannelDataHW() {
+
+
         String vChannelValue;
         Random random = new Random();
         for (int i = 0; i < noOfChannels; i++) {
@@ -242,11 +258,11 @@ public class dashboard extends AppCompatActivity {
             mChannelList.get(i).setchannelValue(String.valueOf(vChannelValue));
             mChannelList.get(i).setchannelTime(time);
             mChannelList.get(i).setchannelDate(date);
-
             mydb.updateChannelValue(mChannelList,i);
             //Log.d("MyTag",mChannelList.get(i).getchannelName());
-            //mydb.addDataLog(mChannelList,i);
+            //mydb.addDataLog(mChannelList,i); already added in channel service
         }
+
     }
 
     void displayDialog(String message){

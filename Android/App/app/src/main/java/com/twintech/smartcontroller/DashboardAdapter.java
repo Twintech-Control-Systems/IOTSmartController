@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sccomponents.gauges.gr018.GR018;
+
 import java.util.List;
 
 
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.twintech.smartcontroller.R.*;
 import static com.twintech.smartcontroller.R.layout.recyclerview_channel_layout;
 import static java.lang.Double.*;
+
 
 public class DashboardAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
 
@@ -36,9 +39,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
     @NonNull
     @Override
     public ChannelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View mView;
         mView = LayoutInflater.from(parent.getContext()).inflate(recyclerview_channel_layout, parent, false);
         return new ChannelViewHolder(mView);
+
     }
 
     @SuppressLint("ResourceAsColor")
@@ -55,10 +60,10 @@ public class DashboardAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
             holder.mChannelValue.setTextColor(Color.BLACK);
         }else
         if( parseDouble(mChannelList.get(position).getchannelValue()) < mChannelList.get(position).getchannelAlarmLow()){
-            holder.mCardView.setCardBackgroundColor(Color.LTGRAY);
+            holder.mCardView.setCardBackgroundColor(Color.WHITE);
             holder.mChannelValue.setTextColor(Color.GREEN);
         }else{
-            holder.mCardView.setCardBackgroundColor(Color.LTGRAY);
+            holder.mCardView.setCardBackgroundColor(Color.WHITE);
             holder.mChannelValue.setTextColor(Color.YELLOW);
         }
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +72,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
                 Intent mIntent = new Intent(mContext, DashboardDetail.class);
                 mIntent.putExtra("Number", mChannelList.get(holder.getAdapterPosition()).getchannelNo());
                 mIntent.putExtra("Name", mChannelList.get(holder.getAdapterPosition()).getchannelName());
-               mIntent.putExtra("Value", mChannelList.get(holder.getAdapterPosition()).getchannelValue());
-               mIntent.putExtra("Unit", mChannelList.get(holder.getAdapterPosition()).getchannelUnit());
+                mIntent.putExtra("Value", mChannelList.get(holder.getAdapterPosition()).getchannelValue());
+                mIntent.putExtra("Unit", mChannelList.get(holder.getAdapterPosition()).getchannelUnit());
                 mContext.startActivity(mIntent);
             }
         });
@@ -78,7 +83,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
 
     @Override
     public int getItemCount() {
-       return mChannelList.size();
+        return mChannelList.size();
         //return 0;
     }
 
@@ -90,11 +95,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
 }
 
 class ChannelViewHolder extends RecyclerView.ViewHolder {
-   TextView mChannelNo,mChannelName,mChannelValue,mChannelUnit;
+    TextView mChannelNo,mChannelName,mChannelValue,mChannelUnit;
     CardView mCardView;
     ChannelViewHolder(View itemView) {
         super(itemView);
-       // mChannelNo = itemView.findViewById(R.id.channelNo);
+        // mChannelNo = itemView.findViewById(R.id.channelNo);
         mChannelName = itemView.findViewById(id.channelName);
         mChannelValue = itemView.findViewById(id.channelValue);
         mChannelUnit = itemView.findViewById(id.channelUnit);
@@ -102,6 +107,12 @@ class ChannelViewHolder extends RecyclerView.ViewHolder {
         mChannelName.setTextColor(Color.BLACK);
         mChannelValue.setTextColor(Color.BLACK);
         mChannelUnit.setTextColor(Color.BLACK);
+        mCardView.setPadding(5,20,5,20);
+        mCardView.setUseCompatPadding(true);
+        //mCardView.setContentPadding(5,10,5,10);
+        mCardView.setPreventCornerOverlap(true);
+        mCardView.setCardBackgroundColor(Color.YELLOW);
     }
 
 }
+

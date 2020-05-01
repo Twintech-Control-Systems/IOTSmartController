@@ -1,0 +1,105 @@
+{
+  "Hardware_Settings":{
+    "Device" :{
+      "Device_Tag_No":"ABCXYZ",
+      "Device_Name":"DEVICE1234"
+    },
+    "Channels":[{
+      "Ch_Id":"",
+      "Ch_Number":"",
+      "Ch_Name":"",
+      "Ch_Type":"",
+      "Ch_Unit":"",
+      "Ch_Precision":"",
+      "Ch_Range":{
+        "Range_Low":"",
+        "Range_High":""
+      },
+      "Ch_Alarm":{
+        "Alarm_Status":"",
+        "Alarm_Low":"",
+        "Alarm_High":""
+      },
+      "Ch_Relay":{
+        "Relay_Low":"",
+        "Relay_High":""
+      }
+    }
+    ],
+    "Relays":[{
+      "Channel1":"0",
+      "Channel2":"0",
+      "Channel3":"0",
+      "Channel4":"0",
+      "Channel5":"0",
+      "Channel6":"0",
+      "Channel7":"0",
+      "Channel8":"0"
+    }
+    ],
+    "Datalogging":{
+      "Datalog_Scan":1,
+      "DataLog_Status":0
+    },
+    "Calibration":{
+
+    },
+    "Dashboard":{
+
+    },
+    "Date_Time":{
+
+    }
+  },
+  "Server_Settings":{
+    "Internal_Server":{
+
+    },
+    "Cloud_Settings":{
+
+    },
+    "Email":{
+
+    }
+  },
+  "Device_Settings":{
+    "WiFi":{
+
+    },
+    "GSM":{
+
+    },
+    "Location":{
+
+    },
+    "Display":{
+
+    },
+    "Sound":{
+
+    },
+    "Lock_Screen":{
+
+    }
+  },
+  "About":{
+    "Name":"",
+    "Softare_Version":"",
+    "Model_Number":"",
+    "Serial_Number":"",
+    "Capacity":"",
+    "Warantee":"",
+    "Network":{
+
+    }
+  },
+  "Factory_Reset":{
+
+  },
+  "Software_Update":{
+
+  },
+  "Reports":{
+
+  }
+}

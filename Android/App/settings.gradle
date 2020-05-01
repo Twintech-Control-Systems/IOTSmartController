@@ -1,2 +1,2 @@
 rootProject.name='SmartController'
-include ':app'
+include ':app', ':GR004', ':GR018'

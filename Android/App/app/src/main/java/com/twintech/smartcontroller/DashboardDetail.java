@@ -20,13 +20,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.sccomponents.gauges.gr004.GR004;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DashboardDetail extends AppCompatActivity {
-
+    GR004 gauge;
     TextView Name,Value,Unit;
     Button Live,History;
     ToggleButton toggleGraphButton;
@@ -51,7 +53,13 @@ public class DashboardDetail extends AppCompatActivity {
         Value = findViewById(R.id.detailChannelValue);
         Unit = findViewById(R.id.detailChannelUnit);
         graph =  findViewById(R.id.graph);
+        gauge = findViewById(R.id.gauge);
+        gauge.setEnableTouch(true);
+        gauge.setValue(0);
+        gauge.setMinValue(0);
+        gauge.setMaxValue(100);
         toggleGraphButton= findViewById(R.id.toggleGraphButton);
+
         toggleGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,14 +67,21 @@ public class DashboardDetail extends AppCompatActivity {
                         new DataPoint(0, 0)});
                 if(toggleGraphButton.isChecked()){
                     long count = 0;
-                    Cursor rs = mydb.getData(channelNo,"ChannelValues");
-                    rs.moveToFirst();
-                    while(rs.isAfterLast() == false){
-                        series.appendData(new DataPoint(count, Double.valueOf(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_VALUE))).intValue()),
-                                true,1000);
-                        rs.moveToNext();
-                        count++;
-                    }
+                    new Thread(new Runnable() {
+                        public void run() {
+                            long xAxisCount = 0;
+                            //progressBar.();
+                            Cursor rs = mydb.getData(channelNo,"ChannelValues");
+                            rs.moveToFirst();
+                            while(rs.isAfterLast() == false){
+                                series.appendData(new DataPoint(xAxisCount, Double.valueOf(rs.getString(rs.getColumnIndex(DBHelper.CHANNEL_COLUMN_VALUE))).intValue()),
+                                        true,1000);
+                                rs.moveToNext();
+                                xAxisCount++;
+                            }
+                        }
+                    }).start();
+
 
                 }
             }
@@ -107,7 +122,7 @@ public class DashboardDetail extends AppCompatActivity {
             seconds++;
         }
         Value.setText(String.valueOf(liveValue));
-
+        gauge.setValue(liveValue);
         }
     @Override
     protected void onDestroy() {
